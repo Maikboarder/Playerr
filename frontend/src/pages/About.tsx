@@ -14,7 +14,7 @@ const About: React.FC = () => {
                     <div onClick={toggleKofi} style={{ cursor: 'pointer', display: 'inline-block' }}>
                         <img src={appLogo} alt="Playerr" style={{ width: '100px', height: 'auto', marginBottom: '0.75rem' }} />
                     </div>
-                    <h3>Playerr v0.1.2 (Beta)</h3>
+                    <h3>Playerr v0.2.2 (Beta)</h3>
                 </div>
 
                 <div className="settings-section" style={{ border: 'none', padding: 0, backgroundColor: 'transparent' }}>

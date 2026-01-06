@@ -1,6 +1,6 @@
 {
   "name": "playerr",
-  "version": "0.1.2-beta",
+  "version": "0.2.2-beta",
   "description": "Playerr - A PVR for Video Games",
   "scripts": {
     "build": "webpack --config ./frontend/build/webpack.config.js",

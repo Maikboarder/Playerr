@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Playerr.Core.Download;
+using Playerr.Core.Configuration;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Playerr.Api.V3.DownloadClients
@@ -15,15 +16,15 @@ namespace Playerr.Api.V3.DownloadClients
     [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
     public class DownloadClientController : ControllerBase
     {
-        private readonly List<DownloadClient> _clients; // Changed from static to readonly, type remains DownloadClient
-        private readonly ConfigurationService _configService; // Changed type to ConfigurationService
-        private readonly ImportStatusService _importStatus; // Added new field
+        private readonly List<DownloadClient> _clients;
+        private readonly ConfigurationService _configService;
+        private readonly ImportStatusService _importStatus;
 
-        public DownloadClientController(ConfigurationService configService, ImportStatusService importStatus) // Added ImportStatusService to constructor
+        public DownloadClientController(ConfigurationService configService, ImportStatusService importStatus)
         {
             _configService = configService;
-            _importStatus = importStatus; // Assigned new field
-            _clients = _configService.LoadDownloadClients(); // Initialized _clients in constructor
+            _importStatus = importStatus;
+            _clients = _configService.LoadDownloadClients();
         }
 
         [HttpGet]
@@ -101,20 +102,6 @@ namespace Playerr.Api.V3.DownloadClients
 
             foreach (var config in _clients.Where(c => c.Enable))
             {
-                try
-                {
-                    IDownloadClient? client = null;
-                    if (config.Implementation.Equals("qBittorrent", StringComparison.OrdinalIgnoreCase))
-                    {
-                        client = new QBittorrentClient(config.Host, config.Port, config.Username ?? "", config.Password ?? "", config.UrlBase);
-                    }
-                    else if (config.Implementation.Equals("Transmission", StringComparison.OrdinalIgnoreCase))
-                    {
-                        client = new TransmissionClient(config.Host, config.Port, config.Username ?? "", config.Password ?? "");
-                    }
-                    else if (config.Implementation.Equals("SABnzbd", StringComparison.OrdinalIgnoreCase))
-                    {
-                        client = new SabnzbdClient(config.Host, config.Port, config.ApiKey ?? "", config.UrlBase);
                 IDownloadClient? client = null;
                 if (config.Implementation.Equals("qBittorrent", StringComparison.OrdinalIgnoreCase))
                 {
@@ -161,41 +148,9 @@ namespace Playerr.Api.V3.DownloadClients
         [HttpDelete("queue/{clientId}/{downloadId}")]
         public async Task<ActionResult> DeleteDownload(int clientId, string downloadId)
         {
-            var config = _clients.FirstOrDefault(c => c.Id == clientId);
-            if (config == null) return NotFound("Client not found");
-
-            IDownloadClient? client = null;
-            if (config.Implementation.Equals("qBittorrent", StringComparison.OrdinalIgnoreCase))
-            {
-                client = new QBittorrentClient(config.Host, config.Port, config.Username ?? "", config.Password ?? "", config.UrlBase);
-            }
-            else if (config.Implementation.Equals("Transmission", StringComparison.OrdinalIgnoreCase))
-            {
-                client = new TransmissionClient(config.Host, config.Port, config.Username ?? "", config.Password ?? "");
-            }
-            else if (config.Implementation.Equals("SABnzbd", StringComparison.OrdinalIgnoreCase))
-            {
-                client = new SabnzbdClient(config.Host, config.Port, config.ApiKey ?? "", config.UrlBase);
-            }
-            else if (config.Implementation.Equals("NZBGet", StringComparison.OrdinalIgnoreCase))
-            {
-                client = new NzbgetClient(config.Host, config.Port, config.Username ?? "", config.Password ?? "", config.UrlBase);
-            }
-
-            if (client == null) return BadRequest("Unsupported client implementation");
-
-            try 
-            {
-                // Decode URL encoded ID (especially for SABnzbd/Transmission which might have funky chars, although unlikely for IDs)
-                var decodedId = Uri.UnescapeDataString(downloadId);
-                var result = await client.RemoveDownloadAsync(decodedId);
-                if (result) return Ok();
-                return BadRequest("Failed to delete download from client.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error deleting download: {ex.Message}");
-            }
+            var result = await HandleDownloadAction(clientId, downloadId, (client, id) => client.RemoveDownloadAsync(id));
+            if (result) return Ok();
+            return BadRequest("Failed to delete download from client.");
         }
 
         [HttpPost("queue/{clientId}/{downloadId}/pause")]

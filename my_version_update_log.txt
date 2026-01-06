@@ -1,0 +1,38 @@
+/usr/local/share/dotnet/sdk/8.0.414/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.DefaultItems.Shared.targets(111,5): warning NETSDK1080: A PackageReference to Microsoft.AspNetCore.App is not necessary when targeting .NET Core 3.0 or higher. If Microsoft.NET.Sdk.Web is used, the shared framework will be referenced automatically. Otherwise, the PackageReference should be replaced with a FrameworkReference. [/Users/imaik/Documents/Playerr/Proyecto/src/Playerr.Host/Playerr.Host.csproj]
+/usr/local/share/dotnet/sdk/8.0.414/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.DefaultItems.Shared.targets(111,5): warning NETSDK1080: A PackageReference to Microsoft.AspNetCore.App is not necessary when targeting .NET Core 3.0 or higher. If Microsoft.NET.Sdk.Web is used, the shared framework will be referenced automatically. Otherwise, the PackageReference should be replaced with a FrameworkReference. [/Users/imaik/Documents/Playerr/Proyecto/src/Playerr.Host/Playerr.Host.csproj]
+/Users/imaik/Documents/Playerr/Proyecto/src/Playerr.Host/Program.cs(328,45): warning CA1307: 'string.Contains(string)' has a method overload that takes a 'StringComparison' parameter. Replace this call in 'Playerr.Host.Program.Main(string[])' with a call to 'string.Contains(string, System.StringComparison)' for clarity of intent. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1307) [/Users/imaik/Documents/Playerr/Proyecto/src/Playerr.Host/Playerr.Host.csproj]
+/Users/imaik/Documents/Playerr/Proyecto/src/Playerr.Host/Program.cs(332,50): warning CA1307: 'string.Contains(string)' has a method overload that takes a 'StringComparison' parameter. Replace this call in 'Playerr.Host.Program.Main(string[])' with a call to 'string.Contains(string, System.StringComparison)' for clarity of intent. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1307) [/Users/imaik/Documents/Playerr/Proyecto/src/Playerr.Host/Playerr.Host.csproj]
+[Config] Found persistent configuration at: /Users/imaik/Documents/Playerr/Proyecto/config
+IGDB credentials loaded from persistent configuration.
+[Startup] Checking Headless Mode: Args=--headless, EnvVar=, Result=True
+info: Playerr.Core.Download.DownloadMonitorService[0]
+      [DownloadMonitor] Service started.
+info: Playerr.Core.Download.DownloadMonitorService[0]
+      [DownloadMonitor] Loaded 2 clients. Checking enabled ones...
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://127.0.0.1:5002
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /Users/imaik/Documents/Playerr/Proyecto
+Playerr running on http://127.0.0.1:5002
+Playerr running on http://127.0.0.1:5002
+Running in Headless Mode (Docker/Server). Press Ctrl+C to exit.
+info: Playerr.Core.Download.DownloadMonitorService[0]
+      [DownloadMonitor] Client SABnzbdorb returned 0 downloads.
+info: Playerr.Core.Download.DownloadMonitorService[0]
+      [DownloadMonitor] Client qbittorrent orb returned 1 downloads.
+info: Playerr.Core.Download.DownloadMonitorService[0]
+      [DownloadMonitor] ID: 48eef111d25ef3d5ca09ebc0b8f9094a0fc7b0fe, Name: Absolum [FitGirl Repack], State: Completed, Path: /downloads/playerr/Absolum [FitGirl Repack]
+info: Playerr.Core.Download.DownloadMonitorService[0]
+      [DownloadMonitor] Found completed download: Absolum [FitGirl Repack] at /downloads/playerr/Absolum [FitGirl Repack]
+info: Playerr.Core.Download.DownloadMonitorService[0]
+      [DownloadMonitor] Checking mapping: Remote='/downloads', Local='/Users/imaik/Desktop/Descargas' against Path='/downloads/playerr/Absolum [FitGirl Repack]'
+info: Playerr.Core.Download.DownloadMonitorService[0]
+      [DownloadMonitor] Mapping path: /downloads/playerr/Absolum [FitGirl Repack] -> /Users/imaik/Desktop/Descargas/playerr/Absolum [FitGirl Repack]
+info: Playerr.Core.Download.DownloadMonitorService[0]
+      [DownloadMonitor] Detected completed download: Absolum [FitGirl Repack]
+[PostDownload] Processing completed download: Absolum [FitGirl Repack] at /Users/imaik/Desktop/Descargas/playerr/Absolum [FitGirl Repack]
+[PostDownload] Resolving game name for: 'Absolum' (Original: 'Absolum [FitGirl Repack]')
