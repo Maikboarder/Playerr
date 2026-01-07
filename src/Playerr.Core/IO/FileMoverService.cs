@@ -32,36 +32,43 @@ namespace Playerr.Core.IO
                 Directory.CreateDirectory(destDir);
             }
 
-            // 1. Try Hardlink
+            // 1. Try Hardlink (Atomic Move)
             try
             {
-                // Note: Hardlinks cannot cross volumes/partitions.
-                // If this fails due to cross-volume moves, we catch and fallback to copy.
+                // Note: Hardlinks cannot cross volumes/partitions or work on network shares.
+                // This is expected behavior when:
+                // - Using network shares (SMB/CIFS/NFS)
+                // - Downloads and library are on different Docker volumes
+                // - Source and destination are on different filesystems
+                // In these cases, we automatically fall back to copy.
                 if (TryCreateHardLink(sourceFile, destinationFile))
                 {
-                    Console.WriteLine($"[FileMover] Hardlink created: {destinationFile} -> {sourceFile}");
+                    Console.WriteLine($"[FileMover] Hardlink created successfully (instant move): {destinationFile}");
                     return true;
                 }
                 else
                 {
-                     Console.WriteLine($"[FileMover] Hardlink creation returned false. Falling back to copy.");
+                     Console.WriteLine($"[FileMover] Hardlink not supported (different volumes or network share detected). Using copy method.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[FileMover] Hardlink failed ({ex.Message}). Falling back to copy.");
+                Console.WriteLine($"[FileMover] Hardlink failed ({ex.Message}). Using copy method instead.");
             }
 
-            // 2. Fallback to Copy
+            // 2. Fallback to Copy (Standard file copy)
             try
             {
                 Console.WriteLine($"[FileMover] Copying file: {sourceFile} -> {destinationFile}");
+                Console.WriteLine($"[FileMover] Note: Copy method is used for network shares and cross-volume transfers in Docker.");
                 File.Copy(sourceFile, destinationFile, overwrite: true);
+                Console.WriteLine($"[FileMover] File copied successfully.");
                 return true;
             }
             catch (Exception ex)
             {
                  Console.WriteLine($"[FileMover] Copy failed: {ex.Message}");
+                 Console.WriteLine($"[FileMover] Verify that the destination path is writable and has sufficient space.");
                  return false;
             }
         }

@@ -22,7 +22,10 @@ namespace Playerr.Api.V3.Settings
 
                 if (targetPath.StartsWith("smb://", StringComparison.OrdinalIgnoreCase))
                 {
-                    return BadRequest(new { error = "Protocol 'smb://' is not supported. Please mount the network drive in Finder (Cmd+K) and use the path in '/Volumes'." });
+                    return BadRequest(new { 
+                        error = "Network protocol 'smb://' detected. This is not a file system path.",
+                        solution = "Desktop: Mount the network share in your OS first (Finder: Cmd+K, Windows: Map Network Drive), then use the mounted path. Docker: Mount the share on your host system, then add it as a volume in docker-compose.yml (e.g., /mnt/myshare:/media)."
+                    });
                 }
 
                 // For Windows compatibility during development, if path is empty or "/", use a default drive

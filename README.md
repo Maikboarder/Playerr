@@ -104,6 +104,54 @@ services:
 3. Paste the Docker Compose code and configure your local folders.
 4. Click **Done**.
 
+#### Using Network Shares with Docker
+
+**Important:** Docker containers access files through the host filesystem, not directly via network protocols.
+
+**The Right Way:**
+1. **Mount the network share on your host system first**:
+   - **Linux:** Mount to a local path (e.g., `/mnt/games`)
+     ```bash
+     # Create mount point
+     sudo mkdir -p /mnt/games
+     
+     # Mount SMB/CIFS share (example)
+     sudo mount -t cifs //192.168.1.100/Games /mnt/games -o username=youruser,password=yourpass
+     
+     # Or add to /etc/fstab for automatic mounting
+     //192.168.1.100/Games /mnt/games cifs credentials=/home/user/.smbcredentials,uid=1000,gid=1000 0 0
+     ```
+   - **macOS:** Use Finder (Cmd+K) to mount, then reference `/Volumes/ShareName`
+   - **Windows:** Map network drive (e.g., Z:\), then use that drive letter
+
+2. **Then bind-mount that path into your Docker container**:
+   ```yaml
+   services:
+     playerr:
+       image: maikboarder/playerr:latest
+       container_name: playerr
+       ports:
+         - "2727:2727"
+       volumes:
+         - ./config:/app/config
+         - /mnt/games:/media              # Linux: Your mounted network share
+         # - /Volumes/ShareName:/media    # macOS: Mounted share
+         # - Z:\:/media                   # Windows: Mapped network drive
+       restart: unless-stopped
+   ```
+
+**Why can't I use `smb://` directly in Docker?**
+- `smb://192.168.1.100/Games` is a **network protocol URL**, not a filesystem path
+- Docker volumes require **actual filesystem paths** that the host OS has already mounted
+- Desktop apps can sometimes use OS-level network APIs, but Docker is isolated from those
+- **Solution:** Always mount network shares on the host first, then pass the mounted path to Docker
+
+**Note about file operations:**
+- Playerr uses hardlinks for instant file moves when possible (zero disk space duplication)
+- Hardlinks **do not work** across different filesystems or network shares
+- When detected, Playerr automatically falls back to standard file copying
+- This is normal behavior and ensures compatibility with all storage configurations
+
 ### Build from Source (For Developers)
 
 If you want to modify the code or build the image locally instead of pulling it from Docker Hub:
@@ -267,6 +315,54 @@ services:
 2. Ve a **Proyecto** -> **Crear**.
 3. Pega el código y configura tus carpetas locales.
 4. Haz clic en **Listo**.
+
+#### Usando Carpetas Compartidas en Red con Docker
+
+**Importante:** Los contenedores Docker acceden a los archivos a través del sistema de archivos del host, no directamente mediante protocolos de red.
+
+**La Forma Correcta:**
+1. **Monta la carpeta compartida en tu sistema host primero**:
+   - **Linux:** Montar en una ruta local (ej., `/mnt/juegos`)
+     ```bash
+     # Crear punto de montaje
+     sudo mkdir -p /mnt/juegos
+     
+     # Montar carpeta compartida SMB/CIFS (ejemplo)
+     sudo mount -t cifs //192.168.1.100/Juegos /mnt/juegos -o username=tuusuario,password=tupass
+     
+     # O agregar a /etc/fstab para montaje automático
+     //192.168.1.100/Juegos /mnt/juegos cifs credentials=/home/user/.smbcredentials,uid=1000,gid=1000 0 0
+     ```
+   - **macOS:** Usa Finder (Cmd+K) para montar, luego usa `/Volumes/NombreRecurso`
+   - **Windows:** Mapea la unidad de red (ej., Z:\), luego usa esa letra de unidad
+
+2. **Luego vincula esa ruta en tu contenedor Docker**:
+   ```yaml
+   services:
+     playerr:
+       image: maikboarder/playerr:latest
+       container_name: playerr
+       ports:
+         - "2727:2727"
+       volumes:
+         - ./config:/app/config
+         - /mnt/juegos:/media              # Linux: Tu carpeta de red montada
+         # - /Volumes/NombreRecurso:/media # macOS: Recurso montado
+         # - Z:\:/media                    # Windows: Unidad de red mapeada
+       restart: unless-stopped
+   ```
+
+**¿Por qué no puedo usar `smb://` directamente en Docker?**
+- `smb://192.168.1.100/Juegos` es una **URL de protocolo de red**, no una ruta del sistema de archivos
+- Los volúmenes de Docker requieren **rutas reales del sistema de archivos** que el sistema operativo host ya haya montado
+- Las aplicaciones de escritorio a veces pueden usar APIs de red del SO, pero Docker está aislado de esas
+- **Solución:** Siempre monta las carpetas de red en el host primero, luego pasa la ruta montada a Docker
+
+**Nota sobre operaciones de archivos:**
+- Playerr usa hardlinks para mover archivos instantáneamente cuando es posible (sin duplicar espacio en disco)
+- Los hardlinks **no funcionan** entre diferentes sistemas de archivos o carpetas de red
+- Cuando se detecta esto, Playerr automáticamente usa copia de archivos estándar
+- Este es el comportamiento normal y asegura compatibilidad con todas las configuraciones de almacenamiento
 
 ### Compilar desde el código (Desarrolladores)
 
