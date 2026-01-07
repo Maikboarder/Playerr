@@ -43,7 +43,7 @@ namespace Playerr.Core.IO
                 // In these cases, we automatically fall back to copy.
                 if (TryCreateHardLink(sourceFile, destinationFile))
                 {
-                    Console.WriteLine($"[FileMover] Hardlink created successfully (instant move): {destinationFile}");
+                    Console.WriteLine($"[FileMover] Hardlink created successfully: {destinationFile}");
                     return true;
                 }
                 else

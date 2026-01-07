@@ -24,7 +24,8 @@ namespace Playerr.Api.V3.Settings
                 {
                     return BadRequest(new { 
                         error = "Network protocol 'smb://' detected. This is not a file system path.",
-                        solution = "Desktop: Mount the network share in your OS first (Finder: Cmd+K, Windows: Map Network Drive), then use the mounted path. Docker: Mount the share on your host system, then add it as a volume in docker-compose.yml (e.g., /mnt/myshare:/media)."
+                        desktopSolution = "Mount the network share in your OS first (Finder: Cmd+K, Windows: Map Network Drive), then use the mounted path.",
+                        dockerSolution = "Mount the share on your host system, then add it as a volume in docker-compose.yml (e.g., /mnt/myshare:/media)."
                     });
                 }
 

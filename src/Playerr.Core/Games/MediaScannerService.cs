@@ -128,9 +128,12 @@ namespace Playerr.Core.Games
                 var skipMsg = $"Media scanner skip: Path not configured or doesn't exist: '{folderPath}'";
                 if (folderPath != null && folderPath.StartsWith("smb://", StringComparison.OrdinalIgnoreCase))
                 {
-                    skipMsg = "The address starts with 'smb://'. This is a network protocol, not a file path.\n" +
-                              "Desktop: Mount the network share in your OS (Finder on macOS: Cmd+K, Windows: Map Network Drive) and use the mounted path (e.g., /Volumes/ShareName or Z:\\).\n" +
-                              "Docker: Mount the network share on your host system first, then bind-mount that path into the container using a volume mapping in docker-compose.yml.";
+                    skipMsg = "The address starts with 'smb://'. This is a network protocol, not a file path.";
+                    Console.WriteLine(skipMsg);
+                    Console.WriteLine("Desktop: Mount the network share in your OS (Finder on macOS: Cmd+K, Windows: Map Network Drive) and use the mounted path (e.g., /Volumes/ShareName or Z:\\).");
+                    Console.WriteLine("Docker: Mount the network share on your host system first, then bind-mount that path into the container using a volume mapping in docker-compose.yml.");
+                    Log(skipMsg);
+                    return 0;
                 }
                 Console.WriteLine(skipMsg);
                 Log(skipMsg);
