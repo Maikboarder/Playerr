@@ -140,6 +140,10 @@ If you want to modify the code or build the image locally instead of pulling it 
 
 ---
 
+## One-Click Deploy
+
+[![Deploy on RepoCloud](https://d16t0pc4846x52.cloudfront.net/deploylobe.svg)](https://repocloud.io/details/Playerr/)
+
 ## Roadmap
 
 ### Phase 1: Foundation (v0.1.0 - v0.4.7)
